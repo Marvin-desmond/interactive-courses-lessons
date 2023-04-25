@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+defineProps<{
+  result?: string
+}>()
 
-const calculations = ref(0)
 </script>
 <template>
     <div 
@@ -11,8 +12,8 @@ const calculations = ref(0)
         class="icon-[material-symbols--device-reset-rounded]
         absolute top-2 left-2 text-2xl text-gray-500 cursor-pointer">
         </span>
-        <div class="absolute bottom-2 right-2 text-4xl">
-          {{ calculations }}
+        <div class="absolute bottom-2 right-2 text-4xl tracking-tighter">
+          {{ result ?? '0' }}
         </div>
       </div>
 </template>
