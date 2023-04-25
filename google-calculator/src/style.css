@@ -8,7 +8,6 @@
     }
 }
 @layer base {
-  @layer base {
     h1 {
       @apply text-3xl;
     }
@@ -27,5 +26,4 @@
     h6 {
       @apply text-sm;
     }
-  }
 }
