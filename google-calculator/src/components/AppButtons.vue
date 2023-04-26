@@ -1,26 +1,21 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import { useSymbols } from '@/symbols'
 import AppButton from '@/components/AppButton.vue'
 
-const emit = defineEmits(['basicOps'])
-
-const buttons = reactive([
-    'Rad', 'Deg', 'x!', '(', ')',
-    '%', 'AC', 'Inv', 'sin', 'ln',
-    '7', '8', '9', '÷', 'π', 
-    'cos', 'log', '4', '5', '6', 
-    '×', 'e', 'tan', '√', '1', 
-    '2', '3', '-', 'Ans', 'EXP',
-    'x<sup>y</sup>', '0', '.', '=', '+'])
+const buttons = useSymbols()
+const emit = defineEmits(['basicOps', 'evalOps'])
 
 const buttonAction = (symbol: string) => {
-  const basicMatch = /[+\-/()÷%×\d]/g
+  const basicMatch = /[+\-/()÷%×πe\d]/g
   if (basicMatch.test(symbol)) {
     emit('basicOps', symbol)
-  } else if (['tan', 'cos', 'log', 'sin', 'ln'].includes(symbol)) {
+  } else if (['tan', 'cos', 'log', 'sin', 'ln', '√'].includes(symbol)) {
     emit('basicOps', symbol + '(')
+  } else if (symbol == '='){
+      emit('evalOps')
   }
 }
+
 </script>
 <template>
   <div class="grid grid-cols-7 grid-rows-5 gap-[6px]">
