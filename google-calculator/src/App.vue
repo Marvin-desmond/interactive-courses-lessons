@@ -81,6 +81,27 @@ const calculateScreen = () => {
   }
 }
 
+const clearScreen = () => {
+  if (result.value) {
+    let index;
+    const escaped = buttons.map(
+      (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      ).join('|')
+    const allMatch = new RegExp(`(${escaped})`, 'g')
+    const all = (result.value as string).match(allMatch)
+
+    const lastSymbol = all?.slice(-1)[0]
+    if (lastSymbol){
+      index = result.value.lastIndexOf(lastSymbol)
+      if (lastSymbol == "("){
+        index = result.value.lastIndexOf(all?.slice(-2, -1)[0])
+      }
+      result.value = result.value.slice(0, index)
+      if (result.value == "") result.value = undefined      
+    }
+  }
+}
+
 onMounted(() => {
   // clearScreen()
 })
@@ -92,6 +113,7 @@ onMounted(() => {
       <app-buttons
         @basic-ops="(n: string) => updateScreen(n)"
         @eval-ops="calculateScreen"
+        @clearOps="clearScreen"
       ></app-buttons>
     </div>
   </div>

@@ -1,12 +1,7 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-
-const props = defineProps<{
+defineProps<{
   result?: string
 }>()
-
-const active_ops = computed(() => props.result)
-const answer_ops = ref<string>()
 
 </script>
 <template>
@@ -20,8 +15,8 @@ const answer_ops = ref<string>()
         <div class="absolute top-2 right-2 text-sm tracking-tighter"> 
 
         </div>
-        <div class="absolute bottom-2 right-2 text-4xl tracking-tighter">
-          {{ active_ops ?? '0' }}
+        <div class="absolute bottom-2 right-2 text-4xl tracking-tighter"
+        v-html="result ?? '0'">
         </div>
       </div>
 </template>

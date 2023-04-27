@@ -3,7 +3,7 @@ import { useSymbols } from '@/symbols'
 import AppButton from '@/components/AppButton.vue'
 
 const buttons = useSymbols()
-const emit = defineEmits(['basicOps', 'evalOps'])
+const emit = defineEmits(['basicOps', 'evalOps', 'clearOps'])
 
 const buttonAction = (symbol: string) => {
   const basicMatch = /[+\-/()÷%×πe\d]/g
@@ -13,6 +13,8 @@ const buttonAction = (symbol: string) => {
     emit('basicOps', symbol + '(')
   } else if (symbol == '='){
       emit('evalOps')
+  } else if (symbol == "AC"){
+    emit("clearOps")
   }
 }
 
