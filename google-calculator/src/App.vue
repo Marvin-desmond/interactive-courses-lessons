@@ -7,6 +7,7 @@ import { useSymbols } from '@/symbols'
 const buttons = useSymbols()
 const result = ref<string>()
 const immediate = ref(false)
+const superscript = ref(false)
 
 const getAllIndeces = (str: string, subStr: string) => {
   var indices = []
@@ -74,11 +75,46 @@ const calculateScreen = () => {
     }
     const pattern = new RegExp(Object.keys(chars).join('|'), 'ig')
     let temp = addMultiplier(result.value)
-    temp = temp.replace(pattern, (m: string) => chars[m])
-
+    temp = correctSup(temp)
+    temp = updatePower(temp)
+    temp = temp.replace(pattern, (m: string) => chars[m])    
     result.value = `${eval(temp)}`
     immediate.value = true
   }
+}
+
+const updateScreenSup = () => {
+  if (result.value != undefined) {
+    if (superscript.value) result.value += "</sup>"
+    else result.value += "<sup>"
+    superscript.value = !superscript.value
+  }
+}
+
+function correctSup(str: string):
+    string {
+    if (str.slice(-1) == "(") str += "1)"
+    if (str.slice(-5) == "<sup>") str += "1</sup>"
+    const pattern = /\(|<sup>|\)|<\/sup>/g
+    let matches = str.match(pattern)
+
+    if (matches !== null) {
+        if (matches.length % 2 === 0) return str
+        let counts_sup = matches!.filter((x: string) => ["<sup>", "</sup>"].includes(x)).length
+        if (counts_sup % 2 !== 0)
+            return str += "</sup>"
+        else 
+            return str += ")"
+    } else {
+        return str
+    }
+}
+
+const updatePower = (_in: string): string => {
+    const powerMatch = /(\d+)<sup>(\d+)<\/sup>/g
+    const replace = "$1**($2)"
+    _in = _in.replace(powerMatch, replace)
+    return _in
 }
 
 const clearScreen = () => {
@@ -113,7 +149,8 @@ onMounted(() => {
       <app-buttons
         @basic-ops="(n: string) => updateScreen(n)"
         @eval-ops="calculateScreen"
-        @clearOps="clearScreen"
+        @clear-ops="clearScreen"
+        @sup-ops="updateScreenSup"
       ></app-buttons>
     </div>
   </div>

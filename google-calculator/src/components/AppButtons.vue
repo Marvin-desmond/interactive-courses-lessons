@@ -3,10 +3,12 @@ import { useSymbols } from '@/symbols'
 import AppButton from '@/components/AppButton.vue'
 
 const buttons = useSymbols()
-const emit = defineEmits(['basicOps', 'evalOps', 'clearOps'])
+const emit = defineEmits([
+  'basicOps', 'evalOps', 'clearOps', 'supOps'
+])
 
 const buttonAction = (symbol: string) => {
-  const basicMatch = /[+\-/()÷%×πe\d]/g
+  const basicMatch = /[+\-()÷%×πe\.\d]/g
   if (basicMatch.test(symbol)) {
     emit('basicOps', symbol)
   } else if (['tan', 'cos', 'log', 'sin', 'ln', '√'].includes(symbol)) {
@@ -15,6 +17,8 @@ const buttonAction = (symbol: string) => {
       emit('evalOps')
   } else if (symbol == "AC"){
     emit("clearOps")
+  } else if (symbol == "x<sup>y</sup>"){
+    emit("supOps")
   }
 }
 
