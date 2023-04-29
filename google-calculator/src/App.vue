@@ -50,7 +50,7 @@ const addMultiplier = (inputCheck: string): string => {
 
 const updateScreen = (_in: string) => {
   if (result.value) {
-    if (immediate.value) {
+    if (immediate.value && !superscript.value) {
       if (/^\d+$/.test(_in)) {
         result.value = _in
       } else result.value += _in
@@ -78,8 +78,9 @@ const calculateScreen = () => {
     temp = correctSup(temp)
     temp = updatePower(temp)
     temp = temp.replace(pattern, (m: string) => chars[m])    
-    result.value = `${eval(temp)}`
+    result.value = `${Number(eval(temp).toFixed(3))}`
     immediate.value = true
+    superscript.value = false
   }
 }
 
@@ -119,6 +120,11 @@ const updatePower = (_in: string): string => {
 
 const clearScreen = () => {
   if (result.value) {
+    if (immediate.value && /^-?\d+\.?\d*$/.test(result.value)) {
+        result.value = undefined
+        return  
+    }
+
     let index;
     const escaped = buttons.map(
       (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -145,7 +151,9 @@ onMounted(() => {
 <template>
   <div class="h-screen w-screen grid place-items-center bg-white">
     <div>
-      <app-screen :result="result"></app-screen>
+      <app-screen 
+      :immediate="immediate"
+      :result="result"></app-screen>
       <app-buttons
         @basic-ops="(n: string) => updateScreen(n)"
         @eval-ops="calculateScreen"
